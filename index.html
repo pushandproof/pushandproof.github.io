@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Push + Proof</title>
+<meta name="description" content="Website templates by Push + Proof.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav id="list"></nav>
+<main>
+  <div id="bar"><span id="current"></span><a id="open" target="_blank" rel="noopener">Open</a></div>
+  <iframe id="frame" title="Template preview"></iframe>
+</main>
+<script src="templates.js"></script>
+<script>
+(function () {
+  const list = document.getElementById("list");
+  const frame = document.getElementById("frame");
+  const open = document.getElementById("open");
+  const current = document.getElementById("current");
+
+  const head = document.createElement("div");
+  head.className = "head";
+  head.textContent = "Push + Proof";
+  list.append(head);
+  const sub = document.createElement("div");
+  sub.className = "sub";
+  sub.textContent = "Templates";
+  list.append(sub);
+
+  TEMPLATES.forEach((t) => {
+    const a = document.createElement("a");
+    a.href = `#${t.repo}`;
+    a.dataset.repo = t.repo;
+    const title = document.createElement("span");
+    title.textContent = t.title;
+    const kind = document.createElement("span");
+    kind.textContent = t.kind;
+    a.append(title, kind);
+    list.append(a);
+  });
+
+  function select() {
+    const repo = location.hash.slice(1) || TEMPLATES[0].repo;
+    const t = TEMPLATES.find((x) => x.repo === repo) || TEMPLATES[0];
+    const url = `${t.repo}/`;
+    if (frame.getAttribute("src") !== url) frame.src = url;
+    open.href = url;
+    current.textContent = `${t.title} — ${t.note}`;
+    list.querySelectorAll("a").forEach((a) => a.classList.toggle("on", a.dataset.repo === t.repo));
+  }
+  window.addEventListener("hashchange", select);
+  select();
+})();
+</script>
+</body>
+</html>
